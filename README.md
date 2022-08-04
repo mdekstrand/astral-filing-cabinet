@@ -28,4 +28,10 @@ such features.  Just the data.  Eventually, it may also support DVC's pointers
 and manipulate data in a DVC repository.  I'm focused on getting the core
 functionality working before adding support for multiple layouts.
 
+Right now AFC is only tested with Git, but there is no reason why it could not
+be used with Mercurial or another DVCS.  It just needs a couple things:
+
+- Commit pointer files (`.afc` files) to the VCS
+- Ignore the tracked files in the VCS
+
 [dvc]: https://dvc.org
