@@ -3,6 +3,9 @@
 The Astral Filing Cabinet (AFC) is a means for working with large files through
 pointer files committed to Git.
 
+This software is just getting started and is fully of baby dragons who haven't
+had their breakfast.
+
 ## Remotes
 
 AFC plans to support pushing and pulling data from multiple types of remote
