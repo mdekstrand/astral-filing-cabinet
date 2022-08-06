@@ -6,6 +6,10 @@ edition = "2021"
 [dependencies]
 # basic reporting support
 log = "^0.4"
+thiserror = "^1.0"
+
+# computational infrastructure
+tokio = { version="^1.0", features=["full"] }
 
 # data and metadata
 md-5 = "^0.10"
