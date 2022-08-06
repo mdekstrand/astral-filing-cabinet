@@ -34,6 +34,7 @@ pub enum HashDecodeError {
 
 /// A digest value with good serialization & I/O support.
 #[repr(transparent)]
+#[derive(Debug, Clone)]
 pub struct DigestValue<const SIZE: usize> {
   pub hash: [u8; SIZE]
 }
