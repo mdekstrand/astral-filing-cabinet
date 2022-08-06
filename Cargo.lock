@@ -23,7 +23,10 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bincode",
+ "digest",
+ "generic-array",
  "happylog",
+ "hex",
  "indicatif",
  "log",
  "md-5",
@@ -216,6 +219,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "hex"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "indicatif"
 version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -391,6 +403,9 @@ name = "relative-path"
 version = "1.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0df32d82cedd1499386877b062ebe8721f806de80b08d183c70184ef17dd1d42"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "scopeguard"
@@ -403,6 +418,20 @@ name = "serde"
 version = "1.0.142"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e590c437916fb6b221e1d00df6e3294f3fccd70ca7e92541c475d6ed6ef5fee2"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.142"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34b5b8d809babe02f538c2cfec6f2c1ed10804c0e5a6a041a049a4f5588ccc2e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "sha1"

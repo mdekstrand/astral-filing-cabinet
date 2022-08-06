@@ -2,6 +2,7 @@
 pub mod cache;
 pub mod remote;
 pub mod tree;
+pub mod filehash;
 pub mod settings;
 
 #[cfg(feature="cli")]
