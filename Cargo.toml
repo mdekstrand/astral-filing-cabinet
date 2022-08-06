@@ -14,6 +14,7 @@ tokio = { version="^1.0", features=["full"] }
 # data and metadata
 md-5 = "^0.10"
 sha1 = "^0.10"
+sha2 = "^0.10"
 toml = "^0.5"
 bincode = "^1.3"
 serde = "^1.0"
