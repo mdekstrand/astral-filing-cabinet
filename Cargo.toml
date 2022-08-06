@@ -6,11 +6,6 @@ edition = "2021"
 [dependencies]
 # basic reporting support
 log = "^0.4"
-anyhow = "^1"
-happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, features=["structopt"] }
-
-indicatif = { version="^0.17", optional=true }
-structopt = { version="^0.3", optional=true }
 
 # data and metadata
 md-5 = "^0.10"
@@ -22,12 +17,19 @@ serde = "^1.0"
 # support for tree layouts
 relative-path = "^1.7"
 
+# CLI interface support
+anyhow = { version="^1", optional=true }
+happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, features=["structopt"] }
+indicatif = { version="^0.17", optional=true }
+structopt = { version="^0.3", optional=true }
+
 [features]
 default = ["cli"]
 cli = [
   "structopt",
   "indicatif",
-  "happylog"
+  "happylog",
+  "anyhow",
 ]
 
 [[bin]]
