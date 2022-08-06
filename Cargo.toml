@@ -7,10 +7,10 @@ edition = "2021"
 # basic reporting support
 log = "^0.4"
 anyhow = "^1"
-fern = { version="^0.6", features=["colored"] }
+happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, features=["structopt"] }
 
-indicatif = "^0.17"
-structopt = "^0.3"
+indicatif = { version="^0.17", optional=true }
+structopt = { version="^0.3", optional=true }
 
 # data and metadata
 md-5 = "^0.10"
@@ -22,6 +22,15 @@ serde = "^1.0"
 # support for tree layouts
 relative-path = "^1.7"
 
+[features]
+default = ["cli"]
+cli = [
+  "structopt",
+  "indicatif",
+  "happylog"
+]
+
 [[bin]]
 name = "afc"
 path = "src/main.rs"
+required-features = ["cli"]

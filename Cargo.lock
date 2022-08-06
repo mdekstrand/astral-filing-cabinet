@@ -23,7 +23,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bincode",
- "fern",
+ "happylog",
  "indicatif",
  "log",
  "md-5",
@@ -168,6 +168,18 @@ checksum = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
 dependencies = [
  "typenum",
  "version_check",
+]
+
+[[package]]
+name = "happylog"
+version = "0.3.0"
+source = "git+https://github.com/mdekstrand/happylog.git#297df68fe5d9e3513a0fc56ef4b76a852921b254"
+dependencies = [
+ "console",
+ "fern",
+ "indicatif",
+ "log",
+ "structopt",
 ]
 
 [[package]]
