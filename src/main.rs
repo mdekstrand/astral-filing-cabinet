@@ -1,7 +1,8 @@
-use astral_filing_cabinet::cli::AFC;
 use happylog::LogOpts;
 use structopt::StructOpt;
 use anyhow::Result;
+
+use astral_filing_cabinet::cli::AFC;
 
 // Wrapper class that sets up logging.
 #[derive(StructOpt, Debug)]
@@ -17,5 +18,5 @@ fn main() -> Result<()> {
   let opts = AFCCLI::from_args();
   opts.logging.init()?;
 
-  Ok(())
+  opts.afc.invoke()
 }
