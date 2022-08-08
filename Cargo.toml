@@ -31,6 +31,9 @@ happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, fe
 indicatif = { version="^0.17", optional=true }
 structopt = { version="^0.3", optional=true }
 
+[dev-dependencies]
+rstest = "^0.15"
+
 [features]
 default = ["cli"]
 cli = [
