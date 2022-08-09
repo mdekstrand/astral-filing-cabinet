@@ -1,21 +1,23 @@
-use std::fs::DirBuilder;
-use std::path::{PathBuf, Path};
 use astral_filing_cabinet::tree::WorkTree;
-use rstest::{fixture, rstest};
+use futures::StreamExt;
 
-#[fixture]
-fn empty_dir() -> PathBuf {
-  let mut path = PathBuf::from("target");
-  path.push("test-dirs");
-  path.push("empty-dir");
-  DirBuilder::new().recursive(true).create(&path).expect("mkdir failed");
+mod common;
+use common::TestDir;
 
-  path
+#[tokio::test]
+async fn test_empty_dir() {
+  let dir = TestDir::empty();
+  let tree = WorkTree::open(dir.path());
+  let arts = tree.scan_artifacts().await;
+  let arts: Vec<_> = arts.collect().await;
+  assert_eq!(arts.len(), 0);
 }
 
-#[rstest]
-fn test_empty_dir(empty_dir: PathBuf) {
-  let tree = WorkTree::open(&empty_dir);
-  let arts = tree.scan_artifacts();
+#[tokio::test]
+async fn test_empty_repo() {
+  let dir = TestDir::tarball("empty-git");
+  let tree = WorkTree::open(dir.path());
+  let arts = tree.scan_artifacts().await;
+  let arts: Vec<_> = arts.collect().await;
   assert_eq!(arts.len(), 0);
 }

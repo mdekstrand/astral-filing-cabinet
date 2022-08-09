@@ -1,10 +1,12 @@
 //! File tree operations.
 use std::path::{PathBuf, Path};
 
-use self::artifact::Artifact;
+use futures::Stream;
 
 pub mod pointer;
 pub mod artifact;
+
+use artifact::Artifact;
 
 /// Representation of a working tree.
 pub struct WorkTree {
@@ -18,7 +20,7 @@ impl WorkTree {
     WorkTree { path }
   }
 
-  pub fn scan_artifacts(&self) -> Vec<Artifact> {
-    Vec::new()
+  pub async fn scan_artifacts(&self) -> impl Stream<Item=Artifact> {
+    futures::stream::iter(Vec::new())
   }
 }
