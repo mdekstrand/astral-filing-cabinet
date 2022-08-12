@@ -5,6 +5,7 @@ use futures::Stream;
 
 pub mod pointer;
 pub mod artifact;
+mod walk;
 
 use artifact::Artifact;
 

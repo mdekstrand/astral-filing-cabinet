@@ -10,6 +10,7 @@ thiserror = "^1.0"
 
 # computational infrastructure
 futures = "^0.3.21"
+tokio-stream = "^0.1.9"
 tokio = { version="^1.0", features=["full"] }
 
 # data and metadata
