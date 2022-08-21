@@ -25,7 +25,8 @@ use futures::TryStreamExt;
 /// This function recursively walks a directory, yielding each directory entry via a stream.
 /// I/O errors encountered during traversal are reported as errors on the stream, and the
 /// walk terminates after the first error it finds.  Channel errors cause this function's
-/// background task to panic.
+/// background task to panic — one consequence of this is that clients should consume this
+/// stream in its entirety, not stop early.
 pub fn walk_directory<P: AsRef<Path>>(path: P) -> impl TryStream<Ok=DirEntry, Error=io::Error> {
   let (send, recv) = unbounded_channel();
 
