@@ -10,7 +10,7 @@ use std::fs::{DirEntry, read_dir};
 
 use log::*;
 
-use futures::Stream;
+use futures::TryStream;
 use tokio::sync::mpsc::{unbounded_channel};
 use tokio::task::spawn_blocking;
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -18,7 +18,7 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 #[cfg(test)]
 use relative_path::RelativePathBuf;
 #[cfg(test)]
-use futures::StreamExt;
+use futures::TryStreamExt;
 
 /// Recursively walk a directory.
 ///
@@ -26,7 +26,7 @@ use futures::StreamExt;
 /// I/O errors encountered during traversal are reported as errors on the stream, and the
 /// walk terminates after the first error it finds.  Channel errors cause this function's
 /// background task to panic.
-pub fn walk_directory<P: AsRef<Path>>(path: P) -> impl Stream<Item=io::Result<DirEntry>> {
+pub fn walk_directory<P: AsRef<Path>>(path: P) -> impl TryStream<Ok=DirEntry, Error=io::Error> {
   let (send, recv) = unbounded_channel();
 
   // get an owned copy of the path
@@ -80,8 +80,8 @@ async fn test_walk_source() {
   let mut stream = walk_directory("src");
   let mut files = Vec::new();
 
-  while let Some(de) = stream.next().await {
-    let de = de.expect("directory entry failure");
+  while let Some(de) = stream.try_next().await.expect("de read fail") {
+    println!("file: {:?}", de.path());
     let ft = de.file_type().expect("file type failure");
     if ft.is_file() {
       let path = de.path();
@@ -91,5 +91,5 @@ async fn test_walk_source() {
   }
 
   assert!(files.len() > 10);
-  assert!(files.contains(&RelativePathBuf::from("src/tree/walk.rs")));
+  assert!(files.contains(&RelativePathBuf::from("src/util/walk.rs")));
 }

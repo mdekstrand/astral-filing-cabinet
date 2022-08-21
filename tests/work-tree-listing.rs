@@ -1,5 +1,5 @@
 use astral_filing_cabinet::tree::WorkTree;
-use futures::StreamExt;
+use futures::{StreamExt, TryStreamExt};
 
 mod common;
 use common::TestDir;
@@ -27,7 +27,7 @@ async fn test_single_artifact() {
   let dir = TestDir::tarball("single-artifact");
   let tree = WorkTree::open(dir.path());
   let arts = tree.scan_artifacts().await;
-  let arts: Vec<_> = arts.collect().await;
+  let arts: Vec<_> = arts.try_collect().await.expect("scan failed");
   assert_eq!(arts.len(), 1);
   let art = &arts[0];
   assert_eq!(art.path().as_str(), "artifact.dat");
