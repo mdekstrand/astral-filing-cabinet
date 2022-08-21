@@ -1,4 +1,5 @@
 //! Manage large data files through pointer files stored in Git.
+mod util;
 pub mod cache;
 pub mod remote;
 pub mod tree;

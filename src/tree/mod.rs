@@ -1,13 +1,14 @@
 //! File tree operations.
 use std::path::{PathBuf, Path};
 
-use futures::Stream;
+use futures::{Stream, StreamExt};
 
 pub mod pointer;
 pub mod artifact;
-mod walk;
 
 use artifact::Artifact;
+
+use crate::util::walk::walk_directory;
 
 /// Representation of a working tree.
 pub struct WorkTree {
@@ -19,6 +20,11 @@ impl WorkTree {
   pub fn open<P: AsRef<Path>>(path: P) -> WorkTree {
     let path = path.as_ref().to_owned();
     WorkTree { path }
+  }
+
+  /// Get the root path of this work tree.
+  pub fn root_path(&self) -> &Path {
+    self.path.as_path()
   }
 
   pub async fn scan_artifacts(&self) -> impl Stream<Item=Artifact> {

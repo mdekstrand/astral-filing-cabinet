@@ -1,9 +1,13 @@
 //! Pointers (references to artifacts) that are committed to git.
+use std::io;
+use std::path::Path;
 
+use log::*;
 use relative_path::{RelativePath, RelativePathBuf};
 use serde::{Serialize, Deserialize};
 
 use crate::filehash::MultiHash;
+use crate::util::io::read_file_string;
 
 /// Full AFC pointer file specification.
 ///
@@ -20,6 +24,16 @@ use crate::filehash::MultiHash;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AFCPointerFile {
   pub artifact: AFCPointer
+}
+
+impl AFCPointerFile {
+  /// Load an artifact from a pointer file.
+  pub async fn load<P: AsRef<Path>>(path: P) -> io::Result<AFCPointerFile> {
+    debug!("reading pointer file {:?}", path.as_ref());
+    let content = read_file_string(path).await?;
+    let obj = toml::from_str(&content)?;
+    Ok(obj)
+  }
 }
 
 impl From<AFCPointer> for AFCPointerFile {
