@@ -32,4 +32,18 @@ async fn test_single_artifact() {
   let art = &arts[0];
   assert_eq!(art.path().as_str(), "artifact.dat");
   assert_eq!(art.pointer_path().as_str(), "artifact.dat.afc");
+  assert_eq!(art.rel_path().as_str(), "artifact.dat");
+}
+
+#[tokio::test]
+async fn test_single_artifact_subdir() {
+  let dir = TestDir::tarball("single-artifact-in-subdir");
+  let tree = WorkTree::open(dir.path());
+  let arts = tree.scan_artifacts().await;
+  let arts: Vec<_> = arts.try_collect().await.expect("scan failed");
+  assert_eq!(arts.len(), 1);
+  let art = &arts[0];
+  assert_eq!(art.path().as_str(), "data/artifact.dat");
+  assert_eq!(art.pointer_path().as_str(), "data/artifact.dat.afc");
+  assert_eq!(art.rel_path().as_str(), "artifact.dat");
 }
