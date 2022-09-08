@@ -19,9 +19,13 @@ const SHA512_SIZE: usize = 64;
 /// A set of file hashes.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MultiHash {
+  #[serde(skip_serializing_if="Option::is_none")]
   pub md5: Option<DigestValue<MD5_SIZE>>,
+  #[serde(skip_serializing_if="Option::is_none")]
   pub sha1: Option<DigestValue<SHA1_SIZE>>,
+  #[serde(skip_serializing_if="Option::is_none")]
   pub sha256: Option<DigestValue<SHA256_SIZE>>,
+  #[serde(skip_serializing_if="Option::is_none")]
   pub sha512: Option<DigestValue<SHA512_SIZE>>,
 }
 
