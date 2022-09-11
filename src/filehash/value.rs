@@ -1,4 +1,4 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, str::FromStr, convert::TryInto};
 
 use generic_array::GenericArray;
 use digest::OutputSizeUser;
@@ -22,8 +22,8 @@ macro_rules! from_ga_impl {
 
 /// Error that occurred decoding a hash.
 #[derive(Debug, Clone, Error)]
-pub enum HashDecodeError {
-  #[error("expected {expected} bytes but decoded {found}")]
+pub enum DigestDecodeError {
+  #[error("expected {expected} bytes but found {found}")]
   InvalidLength {
     found: usize,
     expected: usize,
@@ -70,12 +70,12 @@ impl <const N: usize> Display for DigestValue<N> {
 }
 
 impl <const N: usize> FromStr for DigestValue<N> {
-  type Err = HashDecodeError;
+  type Err = DigestDecodeError;
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     let bytes = decode(s)?;
     let hash = bytes.try_into().map_err(|v: Vec<u8>|  {
-      HashDecodeError::InvalidLength { found: v.len(), expected: N }
+      DigestDecodeError::InvalidLength { found: v.len(), expected: N }
     })?;
     Ok(DigestValue {
       hash
@@ -86,8 +86,12 @@ impl <const N: usize> FromStr for DigestValue<N> {
 impl <const N: usize> Serialize for DigestValue<N> {
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
       where S: serde::Serializer {
-    let s = encode(self.hash);
-    serializer.serialize_str(&s)
+    if serializer.is_human_readable() {
+      let s = encode(self.hash);
+      serializer.serialize_str(&s)
+    } else {
+      serializer.serialize_bytes(&self.hash)
+    }
   }
 }
 
@@ -111,6 +115,17 @@ impl <'de, const N: usize> Visitor<'de> for HexDecodeVisitor<N> {
   where E: serde::de::Error {
     DigestValue::from_str(v).map_err(|_| {
       E::invalid_value(Unexpected::Str(v), &self)
+    })
+  }
+
+  fn visit_bytes<E>(self, v: &[u8]) -> Result<Self::Value, E>
+      where
+          E: serde::de::Error, {
+    let hash: [u8; N] = v.try_into().map_err(|_| {
+      E::invalid_length(v.len(), &self)
+    })?;
+    Ok(DigestValue {
+      hash
     })
   }
 }
