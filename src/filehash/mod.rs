@@ -1,12 +1,15 @@
 //! File hashing support.
 mod value;
 
-
+use std::io;
+use std::path::Path;
 use serde::{Serialize, Deserialize};
 use digest::Digest;
 use md5::Md5;
 use sha1::Sha1;
 use sha2::{Sha256, Sha512};
+use tokio::io::{AsyncReadExt, BufReader};
+use tokio::fs::File;
 
 pub use value::DigestValue;
 
@@ -72,4 +75,45 @@ impl MultiDigest {
       sha512: self.sha512.map(|h| h.finalize().into()),
     }
   }
+}
+
+pub async fn hash_file<P: AsRef<Path>>(path: P) -> io::Result<MultiHash> {
+  let mut digest = MultiDigest::new();
+  let file = File::open(path).await?;
+  let mut read = BufReader::new(file);
+  let mut buf = [0u8; 4096];
+
+  loop {
+    let n = read.read(&mut buf).await?;
+    if n == 0 {
+      break;
+    }
+
+    digest.update(&buf[..n]);
+  }
+
+  Ok(digest.finish())
+}
+
+#[tokio::test]
+async fn test_hash_file() {
+  let path = "Cargo.toml";
+  let hashes = hash_file(path).await.expect("hash error");
+
+  assert!(hashes.md5.is_some());
+  assert!(hashes.sha1.is_some());
+  assert!(hashes.sha256.is_some());
+  assert!(hashes.sha512.is_some());
+
+  let contents = tokio::fs::read(path).await.expect("io error");
+
+  let mut md5 = Md5::new();
+  md5.update(&contents);
+  let md5: [u8; MD5_SIZE] = md5.finalize().into();
+  assert_eq!(hashes.md5.unwrap().hash, md5);
+
+  let mut sha1 = Sha1::new();
+  sha1.update(&contents);
+  let sha1: [u8; SHA1_SIZE] = sha1.finalize().into();
+  assert_eq!(hashes.sha1.unwrap().hash, sha1);
 }
