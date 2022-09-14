@@ -31,6 +31,7 @@ relative-path = { version="^1.7", features=["serde"] }
 anyhow = { version="^1", optional=true }
 happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, features=["structopt"] }
 indicatif = { version="^0.17", optional=true }
+enum_dispatch = { version="^0.3", optional=true }
 structopt = { version="^0.3", optional=true }
 
 [dev-dependencies]
@@ -45,6 +46,7 @@ cli = [
   "indicatif",
   "happylog",
   "anyhow",
+  "enum_dispatch",
 ]
 
 [[bin]]

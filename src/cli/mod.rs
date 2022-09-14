@@ -8,10 +8,19 @@ use structopt::StructOpt;
 use anyhow::Result;
 use tokio::runtime::Builder;
 
+mod util;
+
 /// Manage large data files through attached pointer files committed to VCS.
 #[derive(StructOpt, Debug)]
 #[structopt(name="astral-filing-cabinet")]
 pub struct AFC {
+  #[structopt(name="COMMAND", subcommand)]
+  command: AFCCommand,
+}
+
+#[derive(StructOpt, Debug)]
+enum AFCCommand {
+  Util(util::UtilCommands),
 }
 
 impl AFC {
@@ -29,6 +38,8 @@ impl AFC {
   /// This method is used in code that is setting up its own
   /// [tokio::runtime::Runtime] and wants to run a task.
   pub async fn invoke_async(&self) -> Result<()> {
-    Ok(())
+    match &self.command {
+      AFCCommand::Util(cmd) => cmd.run().await
+    }
   }
 }
