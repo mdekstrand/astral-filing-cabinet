@@ -1,3 +1,4 @@
+//! Implementation of file digest values.
 use std::{fmt::Display, str::FromStr, convert::TryInto};
 
 use generic_array::GenericArray;
