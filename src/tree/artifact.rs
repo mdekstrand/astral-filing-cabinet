@@ -18,11 +18,38 @@ pub struct Artifact {
   meta: Option<ArtifactMeta>,
 }
 
+/// Metadata for an artifact.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ArtifactMeta {
-  size: Option<usize>,
+#[serde(tag="type", rename_all="lowercase")]
+pub enum ArtifactMeta {
+  /// The artifact is a single file.
+  File(FileMeta),
+  /// The artifact is a folder.
+  Folder(FolderMeta),
+}
+
+/// Metadata for a single file.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FileMeta {
+  pub size: Option<usize>,
   #[serde(flatten)]
-  hashes: MultiHash,
+  pub hashes: MultiHash,
+}
+
+/// Metadata for a folder.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FolderMeta {
+  pub nfiles: Option<usize>,
+  #[serde(flatten)]
+  pub hashes: MultiHash,
+  pub files: Vec<FolderEntry>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FolderEntry {
+  pub relpath: RelativePathBuf,
+  #[serde(flatten)]
+  pub meta: FileMeta,
 }
 
 impl Artifact {
