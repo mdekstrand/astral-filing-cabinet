@@ -49,4 +49,9 @@ impl Artifact {
   pub fn pointer_path(&self) -> Option<&RelativePath> {
     self.pointer_path.as_ref().map(|p| p.as_relative_path())
   }
+
+  /// Get the artifact's metadata.
+  pub fn meta(&self) -> Option<&ArtifactMeta> {
+    self.meta.as_ref()
+  }
 }

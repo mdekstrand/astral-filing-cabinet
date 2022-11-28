@@ -1,4 +1,4 @@
-//! Pointers (references to artifacts) that are committed to git.
+//! Native AFC pointers (references to artifacts) that are committed to git.
 use std::io;
 use std::path::Path;
 
