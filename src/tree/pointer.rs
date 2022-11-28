@@ -6,8 +6,9 @@ use log::*;
 use relative_path::{RelativePath, RelativePathBuf};
 use serde::{Serialize, Deserialize};
 
-use crate::filehash::MultiHash;
 use crate::util::io::read_file_string;
+
+use super::artifact::ArtifactMeta;
 
 /// Full AFC pointer file specification.
 ///
@@ -53,7 +54,7 @@ impl Into<AFCPointer> for AFCPointerFile {
 pub struct AFCPointer {
   pub path: RelativePathBuf,
   #[serde(flatten)]
-  pub hashes: MultiHash,
+  pub meta: ArtifactMeta,
 }
 
 impl AFCPointer {

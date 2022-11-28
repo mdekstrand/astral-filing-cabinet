@@ -2,17 +2,27 @@
 use std::io;
 
 use relative_path::{RelativePathBuf, RelativePath};
+use serde::{Serialize, Deserialize};
 
-use super::{pointer::{AFCPointer, AFCPointerFile}, WorkTree};
+use crate::filehash::MultiHash;
+
+use super::{pointer::{AFCPointerFile}, WorkTree};
 
 /// An artifact in the work tree.
 pub struct Artifact {
   /// The path to this artifact within the work tree.
   tree_path: RelativePathBuf,
-  /// The path to this artifact's pointer file within the work tree.
-  pointer_path: RelativePathBuf,
-  /// The artifact pointer data
-  pointer: AFCPointer,
+  /// The path to this artifact's pointer file within the work tree, if it has one.
+  pointer_path: Option<RelativePathBuf>,
+  /// The saved file metadata, if available.
+  meta: Option<ArtifactMeta>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ArtifactMeta {
+  size: Option<usize>,
+  #[serde(flatten)]
+  hashes: MultiHash,
 }
 
 impl Artifact {
@@ -25,8 +35,8 @@ impl Artifact {
     let apath = dir.join(ptr.path());
     Ok(Artifact {
       tree_path: apath,
-      pointer_path: path.to_owned(),
-      pointer: ptr,
+      pointer_path: Some(path.to_owned()),
+      meta: Some(ptr.meta),
     })
   }
 
@@ -36,12 +46,7 @@ impl Artifact {
   }
 
   /// Get the path of the pointer file.
-  pub fn pointer_path(&self) -> &RelativePath {
-    self.pointer_path.as_relative_path()
-  }
-
-  /// Get the artifact path relative to the pointer file.
-  pub fn rel_path(&self) -> &RelativePath {
-    self.pointer.path()
+  pub fn pointer_path(&self) -> Option<&RelativePath> {
+    self.pointer_path.as_ref().map(|p| p.as_relative_path())
   }
 }

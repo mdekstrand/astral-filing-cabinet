@@ -31,8 +31,7 @@ async fn test_single_artifact() {
   assert_eq!(arts.len(), 1);
   let art = &arts[0];
   assert_eq!(art.path().as_str(), "artifact.dat");
-  assert_eq!(art.pointer_path().as_str(), "artifact.dat.afc");
-  assert_eq!(art.rel_path().as_str(), "artifact.dat");
+  assert_eq!(art.pointer_path().unwrap().as_str(), "artifact.dat.afc");
 }
 
 #[tokio::test]
@@ -44,6 +43,5 @@ async fn test_single_artifact_subdir() {
   assert_eq!(arts.len(), 1);
   let art = &arts[0];
   assert_eq!(art.path().as_str(), "data/artifact.dat");
-  assert_eq!(art.pointer_path().as_str(), "data/artifact.dat.afc");
-  assert_eq!(art.rel_path().as_str(), "artifact.dat");
+  assert_eq!(art.pointer_path().unwrap().as_str(), "data/artifact.dat.afc");
 }
