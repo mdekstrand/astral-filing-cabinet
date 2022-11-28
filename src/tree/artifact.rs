@@ -20,7 +20,7 @@ pub struct Artifact {
 
 /// Metadata for an artifact.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag="type", rename_all="lowercase")]
+#[serde(untagged)]
 pub enum ArtifactMeta {
   /// The artifact is a single file.
   File(FileMeta),
