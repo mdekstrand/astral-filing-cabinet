@@ -1,21 +1,21 @@
-use happylog::structopt::LogOpts;
-use structopt::StructOpt;
+use happylog::clap::LogOpts;
+use clap::Parser;
 use anyhow::Result;
 
 use astral_filing_cabinet::cli::AFC;
 
 // Wrapper class that sets up logging.
-#[derive(StructOpt, Debug)]
+#[derive(Parser, Debug)]
 struct AFCCLI {
-  #[structopt(flatten)]
+  #[command(flatten)]
   afc: AFC,
 
-  #[structopt(flatten)]
+  #[command(flatten)]
   logging: LogOpts,
 }
 
 fn main() -> Result<()> {
-  let opts = AFCCLI::from_args();
+  let opts = AFCCLI::parse();
   opts.logging.init()?;
 
   opts.afc.invoke()

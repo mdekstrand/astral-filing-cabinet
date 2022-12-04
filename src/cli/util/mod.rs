@@ -1,5 +1,5 @@
 //! Utility commands - users generally won't need to use these.
-use structopt::StructOpt;
+use clap::Subcommand;
 use anyhow::Result;
 
 pub mod hash_file;
@@ -8,8 +8,8 @@ pub mod hash_file;
 ///
 /// These commands are primarily for testing and internal purposes.  Most users will
 /// not need to use them.
-#[derive(StructOpt, Debug, Clone)]
-#[structopt(name="util")]
+#[derive(Subcommand, Debug, Clone)]
+#[command(name="util")]
 pub enum UtilCommands {
   HashFile(hash_file::HashFileCmd),
 }

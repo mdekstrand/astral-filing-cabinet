@@ -29,10 +29,10 @@ relative-path = { version="^1.7", features=["serde"] }
 
 # CLI interface support
 anyhow = { version="^1", optional=true }
-happylog = { git="https://github.com/mdekstrand/happylog.git", optional=true, features=["structopt"] }
+happylog = { version="^0.3.0-b2", optional=true, features=["clap"] }
 indicatif = { version="^0.17", optional=true }
 enum_dispatch = { version="^0.3", optional=true }
-structopt = { version="^0.3", optional=true }
+clap = { version="^4.0", optional=true }
 
 [dev-dependencies]
 rstest = "^0.15"
@@ -42,7 +42,7 @@ tar = "^0.4.38"
 [features]
 default = ["cli"]
 cli = [
-  "structopt",
+  "clap",
   "indicatif",
   "happylog",
   "anyhow",

@@ -3,16 +3,16 @@ use std::path::PathBuf;
 use anyhow::Result;
 use log::*;
 
-use structopt::StructOpt;
+use clap::Args;
 
 use crate::filehash::{hash_file, DigestValue};
 
 /// Compute hashes for a file.
-#[derive(StructOpt, Debug, Clone)]
-#[structopt(name="hash-file")]
+#[derive(Args, Debug, Clone)]
+#[command(name="hash-file")]
 pub struct HashFileCmd {
   /// The file to hash.
-  #[structopt(name="FILE")]
+  #[arg(name="FILE")]
   file: PathBuf,
 }
 

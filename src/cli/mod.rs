@@ -4,23 +4,27 @@
 //! from their own CLIs. The [AFC] struct defines the AFC command-line interface, except for
 //! logging setup.  The AFC binary wraps this with additional options for verbosity, sets up
 //! a log backend, and hands control off to the CLI.
-use structopt::StructOpt;
+use clap::{Args, Subcommand};
 use anyhow::Result;
 use tokio::runtime::Builder;
 
 mod util;
 
 /// Manage large data files through attached pointer files committed to VCS.
-#[derive(StructOpt, Debug)]
-#[structopt(name="astral-filing-cabinet")]
+#[derive(Args, Debug)]
+#[command(name="astral-filing-cabinet")]
 pub struct AFC {
-  #[structopt(name="COMMAND", subcommand)]
+  #[command(name="COMMAND", subcommand)]
   command: AFCCommand,
 }
 
-#[derive(StructOpt, Debug)]
+#[derive(Subcommand, Debug)]
 enum AFCCommand {
-  Util(util::UtilCommands),
+  Util {
+    /// The utility command to run.
+    #[command(subcommand)]
+    ucmd: util::UtilCommands
+  },
 }
 
 impl AFC {
@@ -39,7 +43,7 @@ impl AFC {
   /// [tokio::runtime::Runtime] and wants to run a task.
   pub async fn invoke_async(&self) -> Result<()> {
     match &self.command {
-      AFCCommand::Util(cmd) => cmd.run().await
+      AFCCommand::Util { ucmd } => ucmd.run().await
     }
   }
 }
