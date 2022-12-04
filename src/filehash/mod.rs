@@ -10,6 +10,8 @@ use sha1::Sha1;
 use sha2::Sha256;
 use tokio::io::{AsyncReadExt, BufReader};
 use tokio::fs::File;
+use friendly::bytes;
+use log::*;
 
 pub use value::DigestValue;
 
@@ -74,6 +76,9 @@ impl MultiDigest {
 pub async fn hash_file<P: AsRef<Path>>(path: P) -> io::Result<MultiHash> {
   let mut digest = MultiDigest::new();
   let file = File::open(path).await?;
+  let stat = file.metadata().await?;
+  let len = stat.len();
+  debug!("hashing file {:?} ({})", file, bytes(len));
   let mut read = BufReader::new(file);
   let mut buf = [0u8; 4096];
 
