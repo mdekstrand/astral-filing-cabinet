@@ -16,7 +16,7 @@ pub use value::DigestValue;
 const MD5_SIZE: usize = 16;
 const SHA1_SIZE: usize = 20;
 const SHA256_SIZE: usize = 32;
-const SHA512_SIZE: usize = 64;
+// const SHA512_SIZE: usize = 64;
 
 
 /// A set of file hashes.
