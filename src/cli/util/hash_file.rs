@@ -30,7 +30,6 @@ impl HashFileCmd {
     maybe_print_hash("MD-5", &hash.md5)?;
     maybe_print_hash("SHA-1", &hash.sha1)?;
     maybe_print_hash("SHA-256", &hash.sha256)?;
-    maybe_print_hash("SHA-512", &hash.sha512)?;
     Ok(())
   }
 }

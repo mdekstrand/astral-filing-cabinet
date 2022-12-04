@@ -1,4 +1,4 @@
-use happylog::LogOpts;
+use happylog::structopt::LogOpts;
 use structopt::StructOpt;
 use anyhow::Result;
 

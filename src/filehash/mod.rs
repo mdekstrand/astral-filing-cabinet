@@ -7,7 +7,7 @@ use serde::{Serialize, Deserialize};
 use digest::Digest;
 use md5::Md5;
 use sha1::Sha1;
-use sha2::{Sha256, Sha512};
+use sha2::Sha256;
 use tokio::io::{AsyncReadExt, BufReader};
 use tokio::fs::File;
 
@@ -28,8 +28,6 @@ pub struct MultiHash {
   pub sha1: Option<DigestValue<SHA1_SIZE>>,
   #[serde(skip_serializing_if="Option::is_none")]
   pub sha256: Option<DigestValue<SHA256_SIZE>>,
-  #[serde(skip_serializing_if="Option::is_none")]
-  pub sha512: Option<DigestValue<SHA512_SIZE>>,
 }
 
 /// A set of digests for computing multiple hashes simultaneously.
@@ -37,7 +35,6 @@ pub struct MultiDigest {
   md5: Option<Md5>,
   sha1: Option<Sha1>,
   sha256: Option<Sha256>,
-  sha512: Option<Sha512>,
 }
 
 fn maybe_update<D: Digest>(hash: &mut Option<D>, data: &[u8]) {
@@ -53,7 +50,6 @@ impl MultiDigest {
       md5: Some(Md5::new()),
       sha1: Some(Sha1::new()),
       sha256: Some(Sha256::new()),
-      sha512: Some(Sha512::new()),
     }
   }
 
@@ -63,7 +59,6 @@ impl MultiDigest {
     maybe_update(&mut self.md5, data);
     maybe_update(&mut self.sha1, data);
     maybe_update(&mut self.sha256, data);
-    maybe_update(&mut self.sha512, data);
   }
 
   /// Finish this digest and return the hashes.
@@ -72,7 +67,6 @@ impl MultiDigest {
       md5: self.md5.map(|h| h.finalize().into()),
       sha1: self.sha1.map(|h| h.finalize().into()),
       sha256: self.sha256.map(|h| h.finalize().into()),
-      sha512: self.sha512.map(|h| h.finalize().into()),
     }
   }
 }
@@ -103,7 +97,6 @@ async fn test_hash_file() {
   assert!(hashes.md5.is_some());
   assert!(hashes.sha1.is_some());
   assert!(hashes.sha256.is_some());
-  assert!(hashes.sha512.is_some());
 
   let contents = tokio::fs::read(path).await.expect("io error");
 
